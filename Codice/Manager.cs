@@ -4,31 +4,35 @@ namespace Battaglia_navale
 {
     class Manager
     {
+        public class turno
+        {
+            private int i;
+            public int go()
+            {
+                i = (i == 0) ? 1 : 0;
+                return i;
+            }
+            public int get() { return i; }
+        }
         public readonly int xMappa,yMappa;//dimensione mappa
         private Campo[] campi=new Campo[2];
-        int t = 0;
+        public turno t;
         public Manager(int xMappa,int yMappa) {
             this.xMappa = xMappa;
             this.yMappa = yMappa;
         }
         public void loop()
         {
-            campi[t].loop();
-            t = (t == 0) ? 1 : 0;//alterno i due campi
+            campi[t.get()].loop();
+            t.go();//alterno i due campi
         }
         public bool shoot(int x,int y)
         {
-            return campi[t].hit(x,y);
+            return campi[t.get()].hit(x,y);
         }
 
     }
-    interface ICampo
-    {
-        bool hit(int x, int y);//cerco e colpisco una nave in posizione x,y
-                                         
-
-    }
-    class Campo:ICampo
+    class Campo
     {
         public List<Nave> flotta;
        
