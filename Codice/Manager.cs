@@ -1,15 +1,33 @@
-﻿namespace Battaglia_navale.Battaglia_navale
+﻿using Battaglia_navale;
+namespace Battaglia_navale
 {
-    interface IManager
+    class Manager
     {
-
-
+        public static int xMappa,yMappa;
+        private Campo[] campi = new Campo();
+        int t = 0;
+       
 
     }
-    interface Campo
+    interface ICampo
     {
-        public Nave get(int x, int y);//cerca una nave con posizione x,y
-        public void hit(int x, int y);//cerca ed in caso affonda nave
+        public void hit(int x, int y);//cerco e colpisco una nave in posizione x,y
+                                         
 
     }
+    class Campo:ICampo
+    {
+        public List<Nave> flotta;
+       
+        void ICampo.hit(int x, int y) {
+            
+            foreach(Nave n in flotta)
+            {
+                if (n.hit(x, y))
+                    break;
+            }
+        }
+       
+    }
+    
 }
