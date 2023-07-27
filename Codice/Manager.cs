@@ -15,12 +15,15 @@ namespace Battaglia_navale
             public int get() { return i; }
             public int prevision() { return (i == 0) ? 1 : 0; }
         }
-        public readonly int xMappa,yMappa;//dimensione mappa
+        public static int xMappa,yMappa;//dimensione mappa
         private Campo[] campi=new Campo[2];
         public turno t;
+        private static void setDimentionMapp(int xMappa, int yMappa) { 
+            (Manager.xMappa, Manager.yMappa) = (xMappa, yMappa); 
+        }
+     
         public Manager(int xMappa,int yMappa) {
-            this.xMappa = xMappa;
-            this.yMappa = yMappa;
+            Manager.setDimentionMapp(xMappa, yMappa);
             campi[0] = new Campo();
             campi[1] = new Campo(); 
             t=new turno();  
@@ -29,7 +32,14 @@ namespace Battaglia_navale
         {
             Console.WriteLine($"turno {t.get()}");
             campi[t.get()].loop();
+            
             t.go();//alterno i due campi
+            if (campi[t.get()].flotta.Count <= 0)
+            {
+                
+                Console.Write("fine");
+                return;
+            }
         }
         public bool shoot(int x,int y)
         {
@@ -37,31 +47,68 @@ namespace Battaglia_navale
         }
         public void addNave(TypeBody t,int x,int y,int iC) { 
             Nave n=new Nave(t,x,y, this);
-            campi[iC].Add(n);
+            if(!campi[iC].Add(n))Console.Write("non puoi inserire la nave");
         }
         public void addNave(int iC)
         {
             Nave n = new Nave(this);
-            campi[iC].Add(n);
-        
+            if (!campi[iC].Add(n)) Console.Write("non puoi inserire la nave");
+
+        }
+        public void printMappa()
+        {
+            campi[0].printCaselle();
+
+            Console.WriteLine("---------");
+            campi[1].printCaselle();
+
         }
 
     }
     class Campo
     {
         public List<Nave> flotta;
+        private Nave[,]? caselle=new Nave[Manager.xMappa,Manager.yMappa]; //tipo nave in modo da poter semplicaficare la ricerca nelle caselle, per sparo
         public Campo()
         {
             flotta=new List<Nave> ();
-        }
-        public void Add(Nave n) => flotta.Add(n);
-        public bool hit(int x, int y) {
             
-            foreach(Nave n in flotta)
+        }
+        public bool Add(Nave n) { ///<summary>aggiungo la nave nelle caselle, controllando se è possibile</summary>
+
+            foreach (KeyValuePair<string, Parts> p in n.getBody())
             {
-                if (n.checkHitted(x, y))
-                    return true;
-                   
+                (int x, int y) = n.getAssolutPosition(p.Value);//trasformo le coordinate relative delle singole parti della nave in coordinate assolute
+                if (caselle[x,y] != null) return false;
+               
+            }
+            modificaCaselle(n);
+            
+            flotta.Add(n);
+            return true;
+        }
+        public void modificaCaselle(Nave n)
+        {
+            foreach (KeyValuePair<string, Parts> p in n.getBody())
+            {
+                (int x, int y) = n.getAssolutPosition(p.Value);//trasformo le coordinate relative delle singole parti della nave in coordinate assolute
+                caselle[x,y] = n;
+            }
+        }
+        public bool hit(int x, int y) {
+            if (caselle[x, y] != null){
+
+                var tNave = caselle[x, y];
+                
+                foreach (KeyValuePair<string, Parts> p in tNave.getBody())
+                {
+ 
+                    (int xA, int yA) = tNave.getAssolutPosition(p.Value);//trasformo le coordinate relative delle singole parti della nave in coordinate assolute
+                    caselle[xA, yA] = null;
+                }
+
+                flotta.Remove(tNave);
+                return true;
             }
             return false;
         }
@@ -70,6 +117,15 @@ namespace Battaglia_navale
             foreach (Nave n in flotta)
             {
                 Console.WriteLine(n.shoot());
+            }
+        }
+        public void printCaselle()
+        {
+            for (int y = Manager.yMappa-1; y >0; y--)
+            {
+                for (int x = 0; x < Manager.xMappa; x++)
+                    Console.Write((caselle[x, y]!=null)+" ");
+                Console.WriteLine();
             }
         }
     }
