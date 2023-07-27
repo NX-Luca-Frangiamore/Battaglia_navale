@@ -4,7 +4,7 @@
     {
          bool shoot(int x,int y);
          bool shoot();
-         bool checkHitted(int x, int y);
+        
 
          (int, int) getAssolutPosition(int x,int y);/// <summary>x,y assoluti;ritorno x,y relati, alla posizione della nave</summary>
         (int, int) getAssolutPosition(Parts part);
@@ -56,14 +56,7 @@
             y = Int32.Parse(Console.ReadLine());
             return shoot(x, y);
         }
-        public bool checkHitted(int xr, int yr)
-        {
-            (int x,int y)= (this.x - xr, this.y - yr);
-             if (body.ContainsKey(x + "," + y)) return true;
-          
-            
-            return false;
-        }
+       
         private bool checkPart(Nave nave) { return false; }
        
     }
