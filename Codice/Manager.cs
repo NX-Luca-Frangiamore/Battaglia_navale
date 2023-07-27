@@ -4,7 +4,7 @@ namespace Battaglia_navale
 {
     class Manager
     {
-        public class turno
+        private class turno
         {
             private int i;
             public int go()
@@ -17,7 +17,7 @@ namespace Battaglia_navale
         }
         public static int xMappa,yMappa;//dimensione mappa
         private Campo[] campi=new Campo[2];
-        public turno t;
+        private turno t;
         private static void setDimentionMapp(int xMappa, int yMappa) { 
             (Manager.xMappa, Manager.yMappa) = (xMappa, yMappa); 
         }
@@ -30,14 +30,14 @@ namespace Battaglia_navale
         }
         public void loop()
         {
-            Console.WriteLine($"turno {t.get()}");
+            Console.WriteLine($"tocca al campo {t.get()}");
             campi[t.get()].loop();
             
             t.go();//alterno i due campi
             if (campi[t.get()].flotta.Count <= 0)
             {
                 
-                Console.Write("fine");
+                Console.Write($"fine, a perso il campo {t.get()}");
                 return;
             }
         }
@@ -87,7 +87,7 @@ namespace Battaglia_navale
             flotta.Add(n);
             return true;
         }
-        public void modificaCaselle(Nave n)
+        private void modificaCaselle(Nave n)
         {
             foreach (KeyValuePair<string, Parts> p in n.getBody())
             {
@@ -121,7 +121,7 @@ namespace Battaglia_navale
         }
         public void printCaselle()
         {
-            for (int y = Manager.yMappa-1; y >0; y--)
+            for (int y = Manager.yMappa-1; y >=0; y--)
             {
                 for (int x = 0; x < Manager.xMappa; x++)
                     Console.Write((caselle[x, y]!=null)+" ");
