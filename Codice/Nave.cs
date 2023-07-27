@@ -10,7 +10,7 @@
         (int, int) getAssolutPosition(Parts part);
          
     }
-    class Nave : INave
+    public class Nave : INave
     {
         private Dictionary<string, Parts> body;/// <summary>permette di assemblare la nave, id="x,y"; x,y sono posizione assoluti</summary>
         public int x;
@@ -56,8 +56,6 @@
             y = Int32.Parse(Console.ReadLine());
             return shoot(x, y);
         }
-       
-        private bool checkPart(Nave nave) { return false; }
        
     }
 

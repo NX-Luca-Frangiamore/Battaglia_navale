@@ -1,9 +1,10 @@
 using Battaglia_navale;
+using System.Reflection.Metadata.Ecma335;
 using System.Security.Cryptography.X509Certificates;
 
 game g = new game();
-g.start(5);
-
+g.start(1);
+g.loop();
 
 
 
@@ -20,13 +21,14 @@ class game
     private void start(int nNavi, int campo) { 
          for(int i = 0; i < nNavi; i++)
          {
-            m.addNave(0);
+            m.addNave(campo);
          }
     }
     public void loop()
     {
-        m.loop();
-        m.printMappa();
+        Console.Write(m.printMappa());
+        if (!m.loop())
+            return;
         this.loop();
     }
 }

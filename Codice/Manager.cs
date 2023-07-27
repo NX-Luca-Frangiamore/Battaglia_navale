@@ -1,8 +1,7 @@
-﻿using Battaglia_navale;
-
+﻿
 namespace Battaglia_navale
 {
-    class Manager
+    public class Manager
     {
         private class turno
         {
@@ -28,7 +27,7 @@ namespace Battaglia_navale
             campi[1] = new Campo(); 
             t=new turno();  
         }
-        public void loop()
+        public bool loop()
         {
             Console.WriteLine($"tocca al campo {t.get()}");
             campi[t.get()].loop();
@@ -38,8 +37,9 @@ namespace Battaglia_navale
             {
                 
                 Console.Write($"fine, a perso il campo {t.get()}");
-                return;
+                return false;
             }
+            return true;
         }
         public bool shoot(int x,int y)
         {
@@ -55,17 +55,14 @@ namespace Battaglia_navale
             if (!campi[iC].Add(n)) Console.Write("non puoi inserire la nave");
 
         }
-        public void printMappa()
+        public string printMappa()
         {
-            campi[0].printCaselle();
-
-            Console.WriteLine("---------");
-            campi[1].printCaselle();
+            return campi[0].printCaselle()+ "\n---------\n"+ campi[1].printCaselle();
 
         }
 
     }
-    class Campo
+    public class Campo
     {
         public List<Nave> flotta;
         private Nave[,]? caselle=new Nave[Manager.xMappa,Manager.yMappa]; //tipo nave in modo da poter semplicaficare la ricerca nelle caselle, per sparo
@@ -119,14 +116,17 @@ namespace Battaglia_navale
                 Console.WriteLine(n.shoot());
             }
         }
-        public void printCaselle()
+        public string printCaselle()
         {
+            string s = "";
             for (int y = Manager.yMappa-1; y >=0; y--)
             {
                 for (int x = 0; x < Manager.xMappa; x++)
-                    Console.Write((caselle[x, y]!=null)+" ");
-                Console.WriteLine();
+                    s=s+(caselle[x, y]!=null)+" ";
+                s = s + "\n";
+
             }
+            return s;
         }
     }
     
