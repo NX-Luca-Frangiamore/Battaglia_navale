@@ -71,34 +71,39 @@ namespace Battaglia_navale
             flotta=new List<Nave> ();
             
         }
+        private bool checkInCampo(int x, int y)
+        {
+            if (x < 0 || x >= Manager.xMappa) return false;
+            if (y < 0 || y >= Manager.yMappa) return false;
+            return true;
+        }
         public bool Add(Nave n) { ///<summary>aggiungo la nave nelle caselle, controllando se è possibile</summary>
 
             foreach (KeyValuePair<string, Parts> p in n.getBody())
             {
                 (int x, int y) = n.getAssolutPosition(p.Value);//trasformo le coordinate relative delle singole parti della nave in coordinate assolute
-                if (x < 0 || x >= Manager.xMappa) return false;
-                if (y < 0 || y >= Manager.yMappa) return false;
-                
+                if (!checkInCampo(x, y))return false;
                 if (caselle[x,y] != null) return false;
                
             }
+
             modificaCaselle(n);
-            
             flotta.Add(n);
             return true;
         }
         private void modificaCaselle(Nave n)
         {
+
             foreach (KeyValuePair<string, Parts> p in n.getBody())
             {
                 (int x, int y) = n.getAssolutPosition(p.Value);//trasformo le coordinate relative delle singole parti della nave in coordinate assolute
-               
+                if (!checkInCampo(x, y)) return;
+
                 caselle[x,y] = n;
             }
         }
         public bool hit(int x, int y) {
-            if(x<0 || x>=Manager.xMappa) return false;
-            if (y < 0 || y >= Manager.xMappa) return false;
+           
            
             if (caselle[x, y] != null){
 
@@ -108,6 +113,7 @@ namespace Battaglia_navale
                 {
  
                     (int xA, int yA) = tNave.getAssolutPosition(p.Value);//trasformo le coordinate relative delle singole parti della nave in coordinate assolute
+                    if (!checkInCampo(xA, yA)) return false;
                     caselle[xA, yA] = null;
                 }
 
