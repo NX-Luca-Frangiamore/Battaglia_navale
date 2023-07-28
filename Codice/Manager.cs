@@ -76,6 +76,9 @@ namespace Battaglia_navale
             foreach (KeyValuePair<string, Parts> p in n.getBody())
             {
                 (int x, int y) = n.getAssolutPosition(p.Value);//trasformo le coordinate relative delle singole parti della nave in coordinate assolute
+                if (x < 0 || x >= Manager.xMappa) return false;
+                if (y < 0 || y >= Manager.yMappa) return false;
+                
                 if (caselle[x,y] != null) return false;
                
             }
@@ -89,10 +92,14 @@ namespace Battaglia_navale
             foreach (KeyValuePair<string, Parts> p in n.getBody())
             {
                 (int x, int y) = n.getAssolutPosition(p.Value);//trasformo le coordinate relative delle singole parti della nave in coordinate assolute
+               
                 caselle[x,y] = n;
             }
         }
         public bool hit(int x, int y) {
+            if(x<0 || x>=Manager.xMappa) return false;
+            if (y < 0 || y >= Manager.xMappa) return false;
+           
             if (caselle[x, y] != null){
 
                 var tNave = caselle[x, y];
